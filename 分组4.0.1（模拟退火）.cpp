@@ -26,12 +26,7 @@ map<oneans, bool> mp;
 // leaderid_blo_bloseq[3][20]:leaders who join in this blo's selection
 // memberid0_blo_bloseq[3][20]:members who will be selected in this
 // blo（初始解）
-#define graph
-//#define Temper
-//#define randout
-//#define worth
-//#define worthfunc
-// define frndly
+#define frndly
 vector<int> ve[101][202];
 int group_num, n, nblo,
     L = 100000000, L0 = 100000000, bl[202], id_blo_blornk[101][202],
@@ -89,7 +84,6 @@ double calworth() {
         dislk++;
     }
   for (int i = 1; i <= group_num; i++) {
-    //	sex_por[leader_id[i]]=1.0*num_male[leader_id[i]]/nblo/2;
     if (num_male[leader_id[i]] + num_male[leader_id[i + group_num / 2]] +
                 sex[leader_id[i]] >
             4 ||
@@ -105,11 +99,7 @@ double calworth() {
     minx = min((int)minx, lea_tmpsum[leader_id[i]] +
                               lea_tmpsum[leader_id[i + group_num / 2]]);
 
-#ifdef worthfunc
-  if (L0 - L < 100000)
-    cout << " " << sum << " " << sex_por << " " << maxx << " " << minx << " "
-         << s2 << endl;
-#endif
+
   return sum - r2 * sex_por - r3 * (maxx - minx) - r1 * s2-r4*dislk;
 }
 inline void save() {
@@ -168,54 +158,37 @@ void SA(bool mark) {
   for (int i = 1; i <= nblo; i++)
     for (int j = 1; j <= num_join_a_blo[i]; j++)
       memid_blo_bloseq[i][j] = memberid0_blo_bloseq[i][j];  // member为动态解
-#ifdef worthfunc
-  if (!mark)
-    freopen("worthtrack-0", "w", stdout);
-  else
-    freopen("worthtrack-1", "w", stdout);
-#endif
-#ifdef randout
-  FILE* fpout = fopen("randout.txt", "w");
-#endif
+
+
+
 
   while (L--) {
     for (int i = 1; i <= nblo; i++)
       stu1bloseq_blo[i] = 0, stu2bloseq_blo[i] = 0;  // stu为要换的组员
     double si = rand() % 10000;
-#ifdef randout
-    fprintf(fpout, "%lf\n", si);
-#endif
+
     si /= 10000;
-    //	cout<<si<<endl;
     for (int i = 1; i <= nblo; i++) {
       do{
       stu1bloseq_blo[i] = rand() % num_join_a_blo[i] + 1;
       stu2bloseq_blo[i] = rand() % num_join_a_blo[i] + 1;
-#ifdef randout
-      fprintf(fpout, "%d %d\n", stu1bloseq_blo[i], stu2bloseq_blo[i]);
-#endif
+
+
       }while (stu1bloseq_blo[i] == stu2bloseq_blo[i])
       int tmp = memid_blo_bloseq[i][stu1bloseq_blo[i]];
       memid_blo_bloseq[i][stu1bloseq_blo[i]] =
           memid_blo_bloseq[i][stu2bloseq_blo[i]];
       memid_blo_bloseq[i][stu2bloseq_blo[i]] = tmp;
     }
-    //		cout<<endl;
     double worthnew = calworth();
 
-#ifdef worth
-    cout << worthnew << endl;
-#endif
-    //		if(L%1000)cout<<worthnew<<endl;
     double dE = worthnew - worthnow;
     if (mark && ans == worthnew)
       worthnew_bak = worthnew, save(), cout << "find solution\n";
     ans = max(ans, worthnew);
     if (dE > 0 || (exp(dE / T) > si)) {  // Accepted
       worthnow = worthnew;
-#ifdef graph
-      if (hist[0] <= 1000000 && !mark) hist[++hist[0]] = worthnew;
-#endif
+
     } else {
       for (int i = 1; i <= nblo; i++) {
         int tmp = memid_blo_bloseq[i][stu1bloseq_blo[i]];
@@ -225,18 +198,9 @@ void SA(bool mark) {
       }
     }
     T *= at;
-    #ifdef Temper
-      if(T_log[0]<2000000&&!mark)T_log[(int)(++T_log[0])]=T;
-    #endif
-    //	if(L%10000000)cout<<T<<" "<<worthnew<<endl;
     if (T < eps) break;
   }
-  /*	for(int i=1; i<=nblo; i++) {
-                  cout<<i<<"blo "<<endl;
-                  for(int j=1; j<=num_join_a_blo[i]; j++)
-                          cout<<memid_blo_bloseq[i][j]<<" ";
-                  cout<<endl;
-          }*/
+
   cout << "SA" << (int)mark + 1 << "completed\n";
   cout << L0 - L << "steps" << endl;
 }
@@ -283,10 +247,7 @@ int main() {
   for (int i = 1; i <= nblo; i++)
     for (int j = 1; j <= group_num; j++) bl[id_blo_blornk[i][j]] = i;
   //第i块中排名为j的人对应的块
-  /*	for(int i=1; i<=nblo; i++)
-                  for(int j=1; j<=group_num;
-     j++)cout<<bl[id_blo_blornk[i][j]]<<endl;
-  */
+
   for (int i = 1; i <= group_num; i++) {
     for (int j = 1; j <= nblo; j++) {
       if (bl[leader_id[i]] == j)
@@ -296,9 +257,8 @@ int main() {
     }
     //处理每个块中参加选择的组长（和他们的双胞胎弟弟）
   }
-  //	for(int i=1; i<=nblo; i++)cout<<num_join_a_blo[i]<<" ";
 
-  //	sc("请输入每位组长对本班全部待选组员的喜爱度");
+  	sc("请输入每位组长对本班全部待选组员的喜爱度");
   int readnum = 0;
   real_group_num = group_num / 2, real_lea_num = group_num / 2;
   for (int i = 1; i <= group_num / 2; i++)
@@ -329,14 +289,6 @@ int main() {
   cout << "请输入性别比例所占权重（0~10之间)", cin >> r2;
   cout << "请输入运算随机数（随心而入，目前较好的有：524171、19260817)",
       cin >> randnum;
-  //	sc("333333\n"),Sleep(1000),sc("222222\n"),Sleep(1000),sc("111111\n"),Sleep(1000),sc("Go!\n");
-  /*	for(int i=1; i<=nblo; i++) {
-                  cout<<i<<"blo "<<endl;
-                  for(int j=1; j<=num_join_a_blo[i]; j++)
-                          cout<<memberid0_blo_bloseq[i][j]<<" ";
-                  cout<<endl;
-          }
-  */
   SA(0);
   SA(1);
   freopen("test.out", "w", stdout);
@@ -379,17 +331,8 @@ int main() {
          << dislknum[i] << "\n\n\n";
   }
   cout << hist[0] << "交换次数" << endl;
-#ifdef graph
-  for (int i = 1; i <= hist[0]; i++) {
-    printf("%d,\n",hist[i]);
-  }
-#endif
-#ifdef Temper
-  for(int i=1;i<=T_log[0];i++)
-    printf("%lf\n",T_log[i]);
-#endif
+
+
 
 }
 
-// r1=0.1 r2=5 endT=0.2 srand:19260817/524171
-// r2=10 r3=2.0 T=600
