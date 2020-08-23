@@ -151,16 +151,17 @@ void work() {
 	}
 	for(int i=1; i<=nblo; i++)
 		KM(i),pb(i),clr();
-/*	int temp=caljicha();
+	int temp=caljicha();
 	if(minjicha>temp) {
 		minjicha=temp;
 		gengxinvetot();
-	}*/
-	double tmp=calfangcha();
+	}
+/*	double tmp=calfangcha();
 	if(minfangcha>tmp){
 		minfangcha=tmp;
 		gengxinvetot();
 	}
+*/
 //	freopen("分组.out","w",stdout);
 	/*	for(int i=1;i<=nblo;i++){
 		cout<<i<<"i ";
@@ -237,17 +238,17 @@ int main() {
 	/*		for(int i=1; i<=nblo; i++)
 			for(int j=1; j<=ngrp; j++)cout<<xh[i][j]<<endl;
 	*/
+	int numin=0;
 	initgrp();
 //	for(int i=1; i<=3; i++)cout<<nzzblo[i]<<"nzzblo"<<endl;
-	sc("请输入每位组长对除其本人所处块中的待选组员的喜爱度，再输入每位组长对本班全部待选组员的喜爱度");
+	sc("请输入每位组长对不是其本人所处块中的待选组员的喜爱度，再输入每位组长对本班全部待选组员的喜爱度");
 	for(int i=1; i<=ngrp/2; i++)
-		for(int j=1; j<=n-ngrp-ngrp/2+nzzblo[bl[lea0[i]]]; j++)cin>>likep[i][j];
-//	cout<<222222;
+		for(int j=1; j<=n-ngrp-ngrp/2+nzzblo[bl[lea0[i]]]; j++)cin>>likep[i][j],numin++;//nzzblo：每个块中组长的人数 
 
 	for(int i=1; i<=ngrp/2; i++)
-		for(int j=1; j<=n-ngrp/2; j++)cin>>likep[i+ngrp/2][j];
+		for(int j=1; j<=n-ngrp/2; j++)cin>>likep[i+ngrp/2][j],numin++;//
 
-
+	cout<<numin<<endl;
 	sc("3\n"),Sleep(1000),sc("2\n"),Sleep(1000),sc("1\n"),Sleep(1000),sc("Go!\n");
 //	PlaySound("C:\\BGM.wav",NULL,SND_FILENAME|SND_ASYNC);
 //system("D:\\BGM.mp3");
